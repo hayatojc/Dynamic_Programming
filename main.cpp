@@ -20,7 +20,8 @@ struct vector2
     int dirPath;
 };
 
-
+//This function recursively returns the min path to the north most border.
+//stores path in an outArray to be written to file.
 void pathFinder(vector2 newMatrix[][MAXC], int row, int col, string outArray[])
 {   int curPath = newMatrix[row][col].dirPath;
     int counter = row;
@@ -66,7 +67,7 @@ int main() {
 
     //file read
     ifstream inFile;
-    inFile.open("input-small.txt");
+    inFile.open("/home/j/joseluis/Algo/input-small.txt");
     if (!inFile)
     {
     cerr << "Unable to open file input-small.txt";
