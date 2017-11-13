@@ -1,0 +1,10 @@
+1 S SW S S 
+1 S S S S 
+1 S SE S S 
+1 S SE SE S 
+5 S S SW S 
+8 SW S SW SW 
+8 SW S SW S 
+8 SW S S S 
+8 SW S S SE 
+8 SW S SE SE 
