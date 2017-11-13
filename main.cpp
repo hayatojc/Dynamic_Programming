@@ -20,8 +20,7 @@ struct vector2
     int dirPath;
 };
 
-//This function recursively returns the min path to the north most border.
-//stores path in an outArray to be written to file.
+
 void pathFinder(vector2 newMatrix[][MAXC], int row, int col, string outArray[])
 {   int curPath = newMatrix[row][col].dirPath;
     int counter = row;
@@ -67,7 +66,7 @@ int main() {
 
     //file read
     ifstream inFile;
-    inFile.open("/home/j/joseluis/Algo/input-small.txt");
+    inFile.open("input-small.txt");
     if (!inFile)
     {
     cerr << "Unable to open file input-small.txt";
@@ -122,7 +121,7 @@ int main() {
             //If in left-most column (only compare up and to right)
             int up = newMatrix[i-1][j].weightSum;
             int right = 0;
-            if (j != col) right = ((newMatrix[i - 1][j + 1].weightSum) * 1.4);
+            if (j != col-1) right = ((newMatrix[i - 1][j + 1].weightSum) * 1.4);
             int left = 0;
             if (j != 0) left = ((newMatrix[i - 1][j - 1].weightSum) * 1.4);
 
@@ -140,7 +139,7 @@ int main() {
                 }
             }
             //If in right-most column (only compare left and up)
-            else if(j == col)
+            else if(j == col-1)
             {
                 if(up < left)
                 {
@@ -170,7 +169,7 @@ int main() {
                     }
                 }
                 else
-                    if( right < left && right >0)
+                    if( right < left)
                     {
                     newMatrix[i][j].weightSum += right;
                     newMatrix[i][j].dirPath = 1;
