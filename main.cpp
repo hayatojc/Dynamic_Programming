@@ -1,8 +1,17 @@
+/*Group 5, Dynamic Programming */
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <cstdlib>
+#include <stdio.h>
+#include <string.h>
+#include <string>
+#include <sstream>
+
 using namespace std;
+const int MAXR = 50;
+const int MAXC = 50;
 
 //Struct to hold the values required in each array element
 struct vector2
@@ -10,6 +19,48 @@ struct vector2
     int weightSum;
     int dirPath;
 };
+
+
+void pathFinder(vector2 newMatrix[][MAXC], int row, int col, string outArray[])
+{   int curPath = newMatrix[row][col].dirPath;
+    int counter = row;
+    if (row < 0)
+        return;
+    if (counter == 0)
+    {
+        ostringstream str1;
+        str1 << col;
+        string converts = str1.str();
+        outArray[0] = converts;
+        cout << col <<  " ";
+        return;
+    }
+
+    if(curPath == -1)
+    {
+        outArray[counter] = "SE";
+        cout << "SE :";
+        pathFinder(newMatrix,counter-1,col-1,outArray);
+    }
+    else if(curPath == 0)
+    {
+        outArray[counter] = "S";
+        cout << "S :";
+        pathFinder(newMatrix,counter-1,col,outArray);
+    }
+    else if(curPath == 1)
+    {
+        outArray[counter] = "SW";
+        cout << "SW :";
+        pathFinder(newMatrix,counter-1,col+1,outArray);
+    }
+
+    else
+    {
+        cout << "Failed" << endl;
+        return;
+    }
+}
 
 int main() {
 
@@ -21,6 +72,7 @@ int main() {
     cerr << "Unable to open file input-small.txt";
     exit(1);
     }
+
     int row = 0;
     int col = 0;
     inFile >> row >> col;
@@ -34,7 +86,8 @@ int main() {
     int i;
     int j;
 
-    vector2 newMatrix[row][col];
+    vector2 newMatrix[MAXR][MAXC];
+    memset(newMatrix, 999, sizeof(testMatrix[0][0]) * row * col);
 
     //Print out Original Matrix
     cout << "Test Matrix:" << endl;
@@ -47,6 +100,7 @@ int main() {
             cout << endl;
         }
 
+
     //New Matrix
     cout << endl << "New Matrix: " << endl;
     for (i = 0; i < row; i++) //Pull in weights for first row of weighted matrix
@@ -58,7 +112,8 @@ int main() {
         }
     }
 
-
+    //This solution iterates through the matrix storing the lowest optimal weights in
+    //each cell. As well as it's dependant direction.
     for (i = 1; i < row; i++) //Pull in weights for remaining rows of weighted matrix
     {
         for(j = 0; j < col; j++)
@@ -72,7 +127,7 @@ int main() {
 
             if(j == 0)
             {
-                if(up <= right)
+                if(up < right)
                 {
                     newMatrix[i][j].weightSum += up;
                     newMatrix[i][j].dirPath = 0;
@@ -86,7 +141,7 @@ int main() {
             //If in right-most column (only compare left and up)
             else if(j == col)
             {
-                if(up <= left)
+                if(up < left)
                 {
                     newMatrix[i][j].weightSum += up;
                     newMatrix[i][j].dirPath = 0;
@@ -100,7 +155,7 @@ int main() {
             //Any columns inbeetween
             else
             {
-                if(up <= right)
+                if(up < right)
                 {
                     if(left < up)
                     {
@@ -114,7 +169,7 @@ int main() {
                     }
                 }
                 else
-                    if( right < left)
+                    if( right < left && right >0)
                     {
                     newMatrix[i][j].weightSum += right;
                     newMatrix[i][j].dirPath = 1;
@@ -124,7 +179,6 @@ int main() {
                         newMatrix[i][j].weightSum += left;
                         newMatrix[i][j].dirPath = -1;
                     }
-
             }
         }
     }
@@ -147,5 +201,30 @@ int main() {
         }
         cout << endl;
     }
+
+    string outArray[row];
+    for (int k = 0; k < row; k++)
+    {
+        outArray[k] = " ";
+    }
+
+    ofstream outFile;
+    outFile.open("output.txt");
+
+    //Print out short path of each bottom element.
+    for (int j = 0; j < col;j++)
+    {
+        cout << endl;
+        pathFinder(newMatrix,row-1,j, outArray);
+        for (int j = 0;j<row;j++)
+        {
+            outFile << outArray[j] << " ";
+        }
+        outFile << endl;
+    }
+    outFile.close();
     return 0;
+
 }
+
+
